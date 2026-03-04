@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Assistant', sans-serif; }
-        /* צבעים מותאמים אישית עבור Tailwind */
         .border-sky-500 { border-color: #0ea5e9; } .bg-sky-50 { background-color: #f0f9ff; } .text-sky-900 { color: #0c4a6e; } .hover\:bg-sky-100:hover { background-color: #e0f2fe; }
         .border-amber-500 { border-color: #f59e0b; } .bg-amber-50 { background-color: #fffbeb; } .text-amber-900 { color: #78350f; } .hover\:bg-amber-100:hover { background-color: #fef3c7; }
         .border-violet-500 { border-color: #8b5cf6; } .bg-violet-50 { background-color: #f5f3ff; } .text-violet-900 { color: #4c1d95; } .hover\:bg-violet-100:hover { background-color: #ede9fe; }
@@ -26,14 +25,10 @@
         <p class="text-gray-500 font-bold mt-2 text-lg">תרגול אוצר מילים בכיף 🚀</p>
     </header>
 
-    <div id="loading" class="text-center font-bold text-blue-500 animate-pulse py-10">
-        מתחבר לענן המילים...
-    </div>
-    
+    <div id="loading" class="text-center font-bold text-blue-500 animate-pulse py-10">טוען את רשימת הספרים...</div>
     <div id="content" class="max-w-4xl mx-auto space-y-8 pb-10"></div>
 
     <script>
-        // ההגדרות של הגיליון שלך
         const SHEET_ID = '1HJ1UDVuzqvWS66hprx8dSFqqoS0OVvZFGOGaRtyDPu8'; 
         const SHEET_NAME = 'Sheet1'; 
 
@@ -42,33 +37,31 @@
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
                 const response = await fetch(url);
                 const text = await response.text();
-                // ניקוי ה-JSON שחוזר מגוגל
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 const rows = json.table.rows;
 
-                const data = rows.map(r => ({
-                    book: r.c[0]?.v,
-                    grade: r.c[1]?.v,
-                    chapter: r.c[2]?.v,
-                    unit: r.c[3]?.v,
-                    link: r.c[4]?.v,
-                    color: r.c[5]?.v || 'blue'
-                }));
+                const data = rows.slice(1) 
+                    .map(r => ({
+                        book: r.c[0]?.v,
+                        grade: r.c[1]?.v,
+                        chapter: r.c[2]?.v,
+                        unit: r.c[3]?.v,
+                        link: r.c[4]?.v,
+                        color: r.c[5]?.v || 'blue'
+                    }))
+                    .filter(item => item.book && item.book !== "Book" && item.link);
 
                 renderBooks(data);
                 document.getElementById('loading').style.display = 'none';
             } catch (e) {
-                console.error('Error fetching data:', e);
-                document.getElementById('loading').innerHTML = `
-                    <div class="bg-red-50 text-red-600 p-4 rounded-2xl border-2 border-red-100">
-                        שגיאה בטעינת הנתונים. <br> וודא שהגיליון שותף כ-"Anyone with the link".
-                    </div>`;
+                document.getElementById('loading').innerHTML = `<div class="text-red-500 font-bold text-center">שגיאה בחיבור לטבלה. וודא שהיא ציבורית.</div>`;
             }
         }
 
         function renderBooks(data) {
             const content = document.getElementById('content');
-            // יצירת רשימה ייחודית של ספרים
+            content.innerHTML = '';
+            
             const books = [...new Set(data.map(d => d.book))];
 
             books.forEach(bookTitle => {
@@ -76,31 +69,28 @@
                 const color = bookData[0].color; 
                 
                 let bookHtml = `
-                    <div class="bg-white rounded-[2.5rem] shadow-xl border-t-8 border-${color}-500 overflow-hidden mb-8 animate-fade-in">
-                        <div class="p-6 bg-${color}-50 flex justify-between items-center border-b border-slate-100">
+                    <div class="bg-white rounded-[2.5rem] shadow-xl border-t-8 border-${color}-500 overflow-hidden mb-8 animate-fade-in text-right">
+                        <div class="p-6 bg-${color}-50 flex justify-between items-center border-b border-slate-100 flex-row">
                             <h2 class="text-3xl font-black text-${color}-900">${bookTitle}</h2>
                             <span class="bg-${color}-500 text-white px-6 py-1 rounded-full text-sm font-black shadow-sm">${bookData[0].grade}</span>
                         </div>
                         <div class="p-6 space-y-6">`;
 
-                // קיבוץ יחידות לפי פרקים בתוך הספר
                 const chapters = [...new Set(bookData.map(d => d.chapter))];
                 chapters.forEach(ch => {
                     bookHtml += `
                         <div>
                             <div class="flex items-center gap-2 mb-3">
                                 <div class="h-2 w-2 rounded-full bg-${color}-400"></div>
-                                <h3 class="font-extrabold text-slate-400 uppercase tracking-wider text-xs">${ch}</h3>
+                                <h3 class="font-extrabold text-slate-400 uppercase tracking-wider text-xs">${ch || 'כללי'}</h3>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
                     
                     const units = bookData.filter(d => d.chapter === ch);
                     units.forEach(u => {
-                        // בניית הקישור לתיקיית ה-app
-                        const fullUrl = `app/index.html?w=${u.link}`;
                         bookHtml += `
-                            <a href="${fullUrl}" class="flex justify-between items-center p-4 bg-slate-50 hover:bg-${color}-100 rounded-2xl transition-all group border border-transparent hover:border-${color}-200">
-                                <span class="font-bold text-slate-700 group-hover:text-${color}-900">${u.unit}</span>
+                            <a href="${u.link}" target="_blank" class="flex justify-between items-center p-4 bg-slate-50 hover:bg-${color}-100 rounded-2xl transition-all group border border-transparent hover:border-${color}-200">
+                                <span class="font-bold text-slate-700 group-hover:text-${color}-900 text-right">${u.unit}</span>
                                 <div class="bg-white p-2 rounded-lg shadow-sm group-hover:shadow-md transition-all">
                                     <span class="text-xl">🎮</span>
                                 </div>
@@ -112,7 +102,6 @@
                 content.innerHTML += bookHtml;
             });
         }
-
         loadData();
     </script>
 </body>
