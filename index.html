@@ -12,17 +12,14 @@
         .eng-text { font-family: 'Fredoka One', cursive; font-weight: 400 !important; } 
         .text-wa-yellow { color: #FFD700; }
         
-        /* מצב לילה */
         .night-mode { background-color: #0f172a !important; color: #f8fafc !important; }
         .night-mode .bg-white { background-color: #1e293b !important; color: #f8fafc !important; }
         .night-mode .bg-slate-50 { background-color: #0f172a !important; }
         
-        /* תיקון קריאות במצב לילה */
         .night-mode .unit-button { background-color: #334155 !important; border-color: #475569 !important; }
         .night-mode .unit-text { color: #FFD700 !important; }
         .night-mode .chapter-header:hover { background-color: #334155 !important; }
 
-        /* צבעי ערכות נושא */
         .border-sky-500 { border-color: #0ea5e9; } .bg-sky-50 { background-color: #f0f9ff; } .text-sky-900 { color: #0c4a6e; }
         .border-amber-500 { border-color: #f59e0b; } .bg-amber-50 { background-color: #fffbeb; } .text-amber-900 { color: #78350f; }
         .border-violet-500 { border-color: #8b5cf6; } .bg-violet-50 { background-color: #f5f3ff; } .text-violet-900 { color: #4c1d95; }
@@ -31,11 +28,9 @@
         .animate-fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* חץ מסתובב */
-        .arrow-icon { transition: transform 0.3s ease; transform: rotate(-90deg); }
-        .open .arrow-icon { transform: rotate(0deg); }
+        .arrow-icon { transition: transform 0.3s ease; }
+        .open .arrow-icon { transform: rotate(180deg); }
         
-        /* אנימציית פתיחה חלקה */
         .chapter-content { 
             display: grid;
             grid-template-rows: 0fr;
@@ -113,15 +108,14 @@
 
                 const chapters = [...new Set(bookData.map(d => d.chapter))];
                 chapters.forEach((ch, index) => {
-                    // הפרק הראשון נשאר פתוח כברירת מחדל
                     const isOpen = index === 0 ? 'open' : ''; 
                     bookHtml += `
                         <div class="chapter-container ${isOpen} border-b border-slate-50 last:border-0 pb-1">
-                            <button onclick="toggleChapter(this)" class="chapter-header w-full flex items-center justify-start gap-3 py-3 px-2 rounded-xl hover:bg-slate-50 transition-all">
+                            <button onclick="toggleChapter(this)" class="chapter-header w-full flex flex-row-reverse items-center justify-end gap-3 py-3 px-2 rounded-xl hover:bg-slate-50 transition-all">
+                                <h3 class="font-bold text-slate-500 text-sm uppercase tracking-widest eng-text" dir="ltr">${ch || 'GENERAL'}</h3>
                                 <svg class="arrow-icon w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
-                                <h3 class="font-bold text-slate-500 text-sm uppercase tracking-widest eng-text text-left" dir="ltr">${ch || 'GENERAL'}</h3>
                             </button>
                             <div class="chapter-content">
                                 <div class="chapter-inner">
