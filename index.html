@@ -109,8 +109,8 @@
                     const units = bookData.filter(d => d.chapter === ch);
                     units.forEach(u => {
                         bookHtml += `
-                            <a href="${u.link}" target="_blank" class="unit-button w-full bg-slate-50 hover:bg-${color}-100 rounded-xl transition-all border border-slate-100 hover:border-${color}-300 group shadow-sm p-3 flex items-center justify-center">
-                                <span class="unit-text text-sm font-bold text-slate-700 group-hover:text-${color}-900 eng-text text-center" dir="ltr">${u.unit}</span>
+                            <a href="${u.link}" target="_blank" class="unit-button w-full bg-slate-50 hover:bg-${color}-100 rounded-xl transition-all border border-slate-100 hover:border-${color}-300 group shadow-sm p-3.5 flex items-center justify-start px-5">
+                                <span class="unit-text text-base font-bold text-slate-700 group-hover:text-${color}-900 eng-text text-left" dir="ltr">${u.unit}</span>
                             </a>`;
                     });
                     bookHtml += `</div></div>`;
