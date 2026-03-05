@@ -41,7 +41,7 @@
             <img src="logo_inner.png" alt="Logo" class="w-20 sm:w-24 drop-shadow-md">
             <div class="text-left sm:text-right">
                 <h1 class="text-3xl sm:text-5xl font-black text-wa-yellow drop-shadow-sm">Word Adventure</h1>
-                <p id="sub-title" class="text-gray-500 font-extrabold text-lg sm:text-xl">תרגול אוצר מילים בכיף 🚀</p>
+                <p id="sub-title" class="text-gray-500 font-extrabold text-lg sm:text-xl">תרגול אוצר מילים בכיף 🦉</p>
             </div>
         </div>
     </header>
@@ -109,7 +109,7 @@
                     const units = bookData.filter(d => d.chapter === ch);
                     units.forEach(u => {
                         bookHtml += `
-                            <a href="${u.link}" target="_blank" class="unit-button w-full text-left py-2.5 px-4 bg-slate-50 hover:bg-${color}-100 rounded-xl transition-all border border-slate-100 hover:border-${color}-300 group shadow-sm flex items-center">
+                            <a href="${u.link}" target="_blank" class="unit-button w-full text-center py-2.5 px-4 bg-slate-50 hover:bg-${color}-100 rounded-xl transition-all border border-slate-100 hover:border-${color}-300 group shadow-sm flex items-center justify-center">
                                 <span class="unit-text text-sm font-bold text-slate-700 group-hover:text-${color}-900 eng-text" dir="ltr">${u.unit}</span>
                             </a>`;
                     });
