@@ -104,13 +104,13 @@
                     bookHtml += `
                         <div>
                             <h3 class="font-bold text-slate-400 text-[10px] uppercase mb-3 border-b border-slate-50 pb-1 tracking-widest">${ch || 'כללי'}</h3>
-                            <div class="flex flex-wrap gap-2">`;
+                            <div class="flex flex-col gap-2">`;
                     
                     const units = bookData.filter(d => d.chapter === ch);
                     units.forEach(u => {
                         bookHtml += `
-                            <a href="${u.link}" target="_blank" class="unit-button flex-grow text-center py-2.5 px-3 bg-slate-50 hover:bg-${color}-100 rounded-xl transition-all border border-slate-100 hover:border-${color}-300 group shadow-sm">
-                                <span class="unit-text text-sm font-bold text-slate-700 group-hover:text-${color}-900">${u.unit}</span>
+                            <a href="${u.link}" target="_blank" class="unit-button w-full text-left py-2.5 px-4 bg-slate-50 hover:bg-${color}-100 rounded-xl transition-all border border-slate-100 hover:border-${color}-300 group shadow-sm flex items-center">
+                                <span class="unit-text text-sm font-bold text-slate-700 group-hover:text-${color}-900 eng-text" dir="ltr">${u.unit}</span>
                             </a>`;
                     });
                     bookHtml += `</div></div>`;
